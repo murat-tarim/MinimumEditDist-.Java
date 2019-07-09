@@ -1,0 +1,130 @@
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Scanner;
+
+public class MED_ {
+
+	  static int min(int x,int y,int z) 
+	    { 
+	        if (x<=y && x<=z) return x; 
+	        if (y<=x && y<=z) return y; 
+	        else return z; 
+	    } 
+	  
+	   public static int editDist(String str1 , String str2 , int m ,int n) 
+	    { 
+	        // If first string is empty, the only option is to 
+	    // insert all characters of second string into first 
+	    if (m == 0) return n; 
+	       
+	    // If second string is empty, the only option is to 
+	    // remove all characters of first string 
+	    if (n == 0) return m; 
+	       
+	    // If last characters of two strings are same, nothing 
+	    // much to do. Ignore last characters and get count for 
+	    // remaining strings. 
+	    if (str1.charAt(m-1) == str2.charAt(n-1)) 
+	        return editDist(str1, str2, m-1, n-1); 
+	       
+	    // If last characters are not same, consider all three 
+	    // operations on last character of first string, recursively 
+	    // compute minimum cost for all three operations and take 
+	    // minimum of three values. 
+	    return 1 + min ( editDist(str1,  str2, m, n-1),    // Insert 
+	                     editDist(str1,  str2, m-1, n),   // Remove 
+	                     editDist(str1,  str2, m-1, n-1) // Replace                      
+	                   ); 
+	    } 
+	    
+	    
+	    static int getMin(int arr[], int n) // to find minimum edit distance values in words array
+	    { 
+	        int res = arr[0]; 
+	          
+	        for (int i = 1; i < n; i++) 
+	            res = Math.min(res, arr[i]); 
+	        return res; 
+	    } 
+	  
+	    public static void main(String args[]) throws IOException 
+	    { 
+	    	Scanner sc = new Scanner(System.in);
+	    	
+	    	System.out.print("Please enter a word for MED : ");
+	    	String input=sc.next();
+	        
+	        String token1 = "";
+	        
+	        // create Scanner inFile1
+	        Scanner inFile1 = new Scanner(new File("C:\\Users\\aslan\\Desktop\\sozcuk_listesi.txt"));
+	        //scan file and split 
+	        
+	        
+	        // Original answer used LinkedList, but probably preferable to use ArrayList in most cases
+	        // List<String> temps = new LinkedList<String>();
+	        List<String> temps = new ArrayList<String>();
+
+	        // while loop
+	        while (inFile1.hasNext()) {
+	          // find next line
+	          token1 = inFile1.next();
+	          temps.add(token1);
+	        }
+	        inFile1.close();
+
+	        String[] tempsArray = temps.toArray(new String[0]);
+	        int[] MED_array;
+	        MED_array= new int [tempsArray.length];
+	        for (int i = 0; i < tempsArray.length; i++) {
+	        	
+	        	 // to store minimum edit distance all words for input
+	        	MED_array[i] = editDist( input , tempsArray[i] , input.length(), tempsArray[i].length()) ;
+	        	
+				
+			}
+	       
+	      System.out.println("Closest 5 element:");
+        	
+        	 int[] store_i; //to find which data matching in array (arrayin kaçýncý elemanýyla eþleþiyor hangi i ) 
+        	 store_i= new int [5];
+ 
+        	 int smallest = MED_array[0];
+        	for (int i = 0; i < store_i.length; i++) {
+        		
+	        for (int k = 0; k < MED_array.length; k++) { //to find minimum edit distances words
+	        
+	        		if(MED_array[k]<=smallest)
+		        	{
+		        		smallest=MED_array[k];
+		        		store_i[i] =k; // to find which elements of words minimum edit distance 
+		        	}
+					
+	        		if(k==MED_array.length-1)
+	        		{
+	        			smallest = MED_array[0];
+	        		}
+				}
+	        
+	         
+	        System.out.println(tempsArray[store_i[i]]); //write 5 med words
+	        
+	        MED_array[store_i[i]]=100;
+	        
+	        	
+			}
+	       
+	       
+	        	
+	       
+				
+			
+	        
+	
+	       
+	    } 
+
+}
